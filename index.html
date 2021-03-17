@@ -128,10 +128,23 @@
         ctx.fillRect(x, y, size, size)
       }
     }
+
+    /* https://stackoverflow.com/a/42546234/960623 */
     function download() {
       var download = document.getElementById("download")
       var image = document.getElementById("canvas").toDataURL("image/png").replace("image/png", "image/octet-stream")
       download.setAttribute("href", image)
+      var fileName = `colors-palette
+        _${parseInt(document.getElementById("val_hoffset").innerHTML)}
+        _${parseInt(document.getElementById("val_soffset").innerHTML)}
+        _${parseInt(document.getElementById("val_loffset").innerHTML)}
+        _${parseInt(document.getElementById("val_size").innerHTML)}
+        _${parseInt(document.getElementById("val_padding").innerHTML)}
+        _${parseInt(document.getElementById("val_blocks").innerHTML)}
+        _${parseInt(document.getElementById("val_hnumber").innerHTML)}
+        _${parseInt(document.getElementById("val_number").innerHTML)}.png`
+
+      download.setAttribute("download", fileName);
     }
 
     // color manipulation functions taken from https://github.com/bgrins/TinyColor
@@ -175,26 +188,36 @@
 
     document.addEventListener("DOMContentLoaded", function (event) {
       // Your code to run since DOM is loaded and ready
-
-      // sliders
       var slider_hoffset = document.getElementById("hoffset")
       var val_hoffset = document.getElementById("val_hoffset")
+      var slider_soffset = document.getElementById("soffset")
+      var val_soffset = document.getElementById("val_soffset")
+      var slider_loffset = document.getElementById("loffset")
+      var val_loffset = document.getElementById("val_loffset")
+      var slider_size = document.getElementById("size")
+      var val_size = document.getElementById("val_size")
+      var slider_padding = document.getElementById("padding")
+      var val_padding = document.getElementById("val_padding")
+      var slider_blocks = document.getElementById("blocks")
+      var val_blocks = document.getElementById("val_blocks")
+      var slider_hnumber = document.getElementById("hnumber")
+      var val_hnumber = document.getElementById("val_hnumber")
+      var slider_number = document.getElementById("number")
+      var val_number = document.getElementById("val_number")
+
+      // sliders
       val_hoffset.innerHTML = slider_hoffset.value // Display the default slider value
       slider_hoffset.oninput = function () {
         // Update the current slider value (each time you drag the slider handle)
         val_hoffset.innerHTML = this.value
         doPalette()
       }
-      var slider_soffset = document.getElementById("soffset")
-      var val_soffset = document.getElementById("val_soffset")
       val_soffset.innerHTML = slider_soffset.value // Display the default slider value
       slider_soffset.oninput = function () {
         // Update the current slider value (each time you drag the slider handle)
         val_soffset.innerHTML = this.value
         doPalette()
       }
-      var slider_loffset = document.getElementById("loffset")
-      var val_loffset = document.getElementById("val_loffset")
       val_loffset.innerHTML = slider_loffset.value // Display the default slider value
       slider_loffset.oninput = function () {
         // Update the current slider value (each time you drag the slider handle)
@@ -202,16 +225,12 @@
         doPalette()
       }
 
-      var slider_size = document.getElementById("size")
-      var val_size = document.getElementById("val_size")
       val_size.innerHTML = slider_size.value // Display the default slider value
       slider_size.oninput = function () {
         // Update the current slider value (each time you drag the slider handle)
         val_size.innerHTML = this.value
         doPalette()
       }
-      var slider_padding = document.getElementById("padding")
-      var val_padding = document.getElementById("val_padding")
       val_padding.innerHTML = slider_padding.value // Display the default slider value
       slider_padding.oninput = function () {
         // Update the current slider value (each time you drag the slider handle)
@@ -219,24 +238,18 @@
         doPalette()
       }
 
-      var slider_blocks = document.getElementById("blocks")
-      var val_blocks = document.getElementById("val_blocks")
       val_blocks.innerHTML = slider_blocks.value // Display the default slider value
       slider_blocks.oninput = function () {
         // Update the current slider value (each time you drag the slider handle)
         val_blocks.innerHTML = this.value
         doPalette()
       }
-      var slider_hnumber = document.getElementById("hnumber")
-      var val_hnumber = document.getElementById("val_hnumber")
       val_hnumber.innerHTML = slider_hnumber.value // Display the default slider value
       slider_hnumber.oninput = function () {
         // Update the current slider value (each time you drag the slider handle)
         val_hnumber.innerHTML = this.value
         doPalette()
       }
-      var slider_number = document.getElementById("number")
-      var val_number = document.getElementById("val_number")
       val_number.innerHTML = slider_number.value // Display the default slider value
       slider_number.oninput = function () {
         // Update the current slider value (each time you drag the slider handle)
