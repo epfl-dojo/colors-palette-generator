@@ -72,7 +72,14 @@
                 <input type="radio" id="pattern_color_white" name="pattern_color" value="white">
                 <label for="pattern_color_white">white</label>
       </div>
-
+      <div class="slider_block slider_dsize">
+        Dash size: <span id="val_dsize">0</span><br />
+        <input type="range" min="0" max="32" value="3" step="0.5" name="dsize" id="dsize" />
+      </div>
+      <div class="slider_block slider_ssize">
+        Space size: <span id="val_ssize">0</span><br />
+        <input type="range" min="0" max="32" value="1" step="0.5" name="ssize" id="ssize" />
+      </div>
     </fieldset>
     <fieldset>
       <legend><b>About:</b></legend>
@@ -106,6 +113,9 @@
       let pattern = document.querySelector('input[name="pattern"]:checked').value
       let pattern_color = document.querySelector('input[name="pattern_color"]:checked').value
 
+      let dsize = parseFloat(document.getElementById("val_dsize").innerHTML) // dashes size
+      let ssize = parseFloat(document.getElementById("val_ssize").innerHTML) // spaces size
+
       console.debug(`doPalette options: 
                     hoffset: ${hoffset}, soffset: ${soffset}, loffset: ${loffset},
                     size: ${size}, padding: ${padding}, number: ${number}, 
@@ -130,8 +140,8 @@
             ctx.fillRect(x, y, size, size)
 
             if (pattern == 'true') {
-              ctx.setLineDash([1, 3]);
               ctx.beginPath()
+              ctx.setLineDash([dsize, ssize])
               for (let d=1; d <= size; d+=4) {
                 ctx.moveTo(x+1, y+d)
                 ctx.lineTo(x+size-1, y+d)
@@ -149,8 +159,8 @@
         ctx.fillStyle = hslToRgbHex(0, 0, ll)
         ctx.fillRect(x, y, size, size)
         if (pattern == 'true') {
-          ctx.setLineDash([1, 3]);
           ctx.beginPath()
+          ctx.setLineDash([dsize, ssize])
           for (let d=1; d <= size; d+=4) {
             ctx.moveTo(x+1, y+d)
             ctx.lineTo(x+size-1, y+d)
@@ -166,8 +176,8 @@
         ctx.fillStyle = hslToRgbHex(0, 0, ll)
         ctx.fillRect(x, y, size, size)
         if (pattern == 'true') {
-          ctx.setLineDash([1, 3]);
           ctx.beginPath()
+          ctx.setLineDash([dsize, ssize])
           for (let d=1; d <= size; d+=4) {
             ctx.moveTo(x+1, y+d)
             ctx.lineTo(x+size-1, y+d)
@@ -177,8 +187,8 @@
         }
       }
       if (pattern == 'true') {
-        ctx.setLineDash([1, 3]);
         ctx.beginPath()
+        ctx.setLineDash([dsize, ssize])
         for (let d=1; d <= size; d+=4) {
           ctx.moveTo(canvas.width - size - padding, canvas.height - size + d - padding)
           ctx.lineTo(canvas.width - padding, canvas.height - size + d - padding)
