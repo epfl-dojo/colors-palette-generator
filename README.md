@@ -1,6 +1,8 @@
 # colors palette generator
 
-![](screenshot.png)
+Try it on https://epfl-dojo.github.io/colors-palette-generator/.
+
+[![](screenshot.png)](https://epfl-dojo.github.io/colors-palette-generator/)
 
 ## Links
 
