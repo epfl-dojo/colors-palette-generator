@@ -58,13 +58,13 @@
     </fieldset>
     <fieldset>
       <legend><b>Pattern Options:</b></legend>
-      <div class="slider_block slider_number">
+      <div class="radio_block radio_number">
         Pattern:  <input type="radio" id="pattern_on" name="pattern" value="true">
                   <label for="pattern_on">On</label>
                   <input type="radio" id="pattern_off" name="pattern" value="false" checked="checked">
                   <label for="pattern_off">Off</label>
       </div>
-      <div class="slider_block slider_number">
+      <div class="radio_block radio_number">
         Color:  <input type="radio" id="pattern_color_black" name="pattern_color" value="black" checked="checked">
                 <label for="pattern_color_black">black</label>
                 <input type="radio" id="pattern_color_grey" name="pattern_color" value="grey">
@@ -106,16 +106,11 @@
       let pattern = document.querySelector('input[name="pattern"]:checked').value;
       let pattern_color = document.querySelector('input[name="pattern_color"]:checked').value;
 
-      console.log(pattern_color)
-      console.debug("doPalette options:")
-      console.debug("  - hoffset:", hoffset)
-      console.debug("  - soffset:", soffset)
-      console.debug("  - loffset:", loffset)
-      console.debug("  - size:", size)
-      console.debug("  - padding:", padding)
-      console.debug("  - blocks:", blocks)
-      console.debug("  - hnumber:", hnumber)
-      console.debug("  - number:", number)
+      console.debug(`doPalette options: 
+                    hoffset: ${hoffset}, soffset: ${soffset}, loffset: ${loffset},
+                    size: ${size}, padding: ${padding}, number: ${number}, 
+                    blocks: ${blocks}, hnumber: ${hnumber},
+                    pattern: ${pattern}, pattern_color: ${pattern_color}`)
 
       canvas.width = (size + padding) * number * blocks + size + padding
       canvas.height = (size + padding) * number * (hnumber / blocks) + size + padding
@@ -250,82 +245,28 @@
       return "#" + rgbToHex(r * 255, g * 255, b * 255)
     }
 
+    // Your code to run since DOM is loaded and ready
     document.addEventListener("DOMContentLoaded", function (event) {
-      // Your code to run since DOM is loaded and ready
-      var slider_hoffset = document.getElementById("hoffset")
-      var val_hoffset = document.getElementById("val_hoffset")
-      var slider_soffset = document.getElementById("soffset")
-      var val_soffset = document.getElementById("val_soffset")
-      var slider_loffset = document.getElementById("loffset")
-      var val_loffset = document.getElementById("val_loffset")
-      var slider_size = document.getElementById("size")
-      var val_size = document.getElementById("val_size")
-      var slider_padding = document.getElementById("padding")
-      var val_padding = document.getElementById("val_padding")
-      var slider_blocks = document.getElementById("blocks")
-      var val_blocks = document.getElementById("val_blocks")
-      var slider_hnumber = document.getElementById("hnumber")
-      var val_hnumber = document.getElementById("val_hnumber")
-      var slider_number = document.getElementById("number")
-      var val_number = document.getElementById("val_number")
 
       // sliders
-      val_hoffset.innerHTML = slider_hoffset.value // Display the default slider value
-      slider_hoffset.oninput = function () {
-        // Update the current slider value (each time you drag the slider handle)
-        val_hoffset.innerHTML = this.value
-        doPalette()
-      }
-      val_soffset.innerHTML = slider_soffset.value // Display the default slider value
-      slider_soffset.oninput = function () {
-        // Update the current slider value (each time you drag the slider handle)
-        val_soffset.innerHTML = this.value
-        doPalette()
-      }
-      val_loffset.innerHTML = slider_loffset.value // Display the default slider value
-      slider_loffset.oninput = function () {
-        // Update the current slider value (each time you drag the slider handle)
-        val_loffset.innerHTML = this.value
-        doPalette()
-      }
+      var sliders = document.querySelectorAll('div.slider_block')
+      sliders.forEach((e,i) => {
+        let spa = e.querySelector('span')
+        let inp = e.querySelector('input')
+        spa.innerHTML = inp.value // Display the default slider value
+        inp.oninput = () => {     // Update the current slider value (each time you drag the slider handle)
+          spa.innerHTML = inp.value
+          doPalette()
+        }
+      })
 
-      val_size.innerHTML = slider_size.value // Display the default slider value
-      slider_size.oninput = function () {
-        // Update the current slider value (each time you drag the slider handle)
-        val_size.innerHTML = this.value
-        doPalette()
-      }
-      val_padding.innerHTML = slider_padding.value // Display the default slider value
-      slider_padding.oninput = function () {
-        // Update the current slider value (each time you drag the slider handle)
-        val_padding.innerHTML = this.value
-        doPalette()
-      }
-
-      val_blocks.innerHTML = slider_blocks.value // Display the default slider value
-      slider_blocks.oninput = function () {
-        // Update the current slider value (each time you drag the slider handle)
-        val_blocks.innerHTML = this.value
-        doPalette()
-      }
-      val_hnumber.innerHTML = slider_hnumber.value // Display the default slider value
-      slider_hnumber.oninput = function () {
-        // Update the current slider value (each time you drag the slider handle)
-        val_hnumber.innerHTML = this.value
-        doPalette()
-      }
-      val_number.innerHTML = slider_number.value // Display the default slider value
-      slider_number.oninput = function () {
-        // Update the current slider value (each time you drag the slider handle)
-        val_number.innerHTML = this.value
-        doPalette()
-      }
-
+      // radios
       var radios = document.querySelectorAll('input[type=radio]')
       for (let i=0, rLen=radios.length; i<rLen; i++) {
         radios[i].oninput = function () { doPalette() }
-      } 
+      }
 
+      // load the palette on first load
       doPalette()
     })
   </script>
