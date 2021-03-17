@@ -57,6 +57,24 @@
       </div>
     </fieldset>
     <fieldset>
+      <legend><b>Pattern Options:</b></legend>
+      <div class="slider_block slider_number">
+        Pattern:  <input type="radio" id="pattern_on" name="pattern" value="true">
+                  <label for="pattern_on">On</label>
+                  <input type="radio" id="pattern_off" name="pattern" value="false" checked="checked">
+                  <label for="pattern_off">Off</label>
+      </div>
+      <div class="slider_block slider_number">
+        Color:  <input type="radio" id="pattern_color_black" name="pattern_color" value="black" checked="checked">
+                <label for="pattern_color_black">black</label>
+                <input type="radio" id="pattern_color_grey" name="pattern_color" value="grey">
+                <label for="pattern_color_grey">grey</label>
+                <input type="radio" id="pattern_color_white" name="pattern_color" value="white">
+                <label for="pattern_color_white">white</label>
+      </div>
+
+    </fieldset>
+    <fieldset>
       <legend><b>About:</b></legend>
       <p>
         Color palette generator have been made by <br /><a href="https://github.com/multiscan">multiscan</a> &
@@ -84,6 +102,11 @@
       let blocks = parseInt(document.getElementById("val_blocks").innerHTML) // total number of big blocks by line
       let hnumber = parseInt(document.getElementById("val_hnumber").innerHTML) // total number of big blocks
       let number = parseInt(document.getElementById("val_number").innerHTML) // number of square in big blocks
+
+      let pattern = document.querySelector('input[name="pattern"]:checked').value;
+      let pattern_color = document.querySelector('input[name="pattern_color"]:checked').value;
+
+      console.log(pattern_color)
       console.debug("doPalette options:")
       console.debug("  - hoffset:", hoffset)
       console.debug("  - soffset:", soffset)
@@ -110,6 +133,17 @@
 
             ctx.fillStyle = hslToRgbHex(hh, ss, ll)
             ctx.fillRect(x, y, size, size)
+
+            if (pattern == 'true') {
+              ctx.beginPath();
+              ctx.setLineDash([1, 3]);
+              for (let d=1; d <= size; d+=4) {
+                ctx.moveTo(x+1, y+d);
+                ctx.lineTo(x+size-1, y+d);
+              }
+              ctx.strokeStyle = pattern_color
+              ctx.stroke();
+            }
           }
         }
       }
@@ -119,6 +153,16 @@
         x = l * (size + padding)
         ctx.fillStyle = hslToRgbHex(0, 0, ll)
         ctx.fillRect(x, y, size, size)
+        if (pattern == 'true') {
+          ctx.beginPath();
+          ctx.setLineDash([1, 3]);
+          for (let d=1; d <= size; d+=4) {
+            ctx.moveTo(x+1, y+d);
+            ctx.lineTo(x+size-1, y+d);
+          }
+          ctx.strokeStyle = pattern_color
+          ctx.stroke();
+        }
       }
       x = canvas.width - size - padding
       for (let l = 0; l < number * (hnumber / blocks); l++) {
@@ -126,6 +170,28 @@
         y = l * (size + padding)
         ctx.fillStyle = hslToRgbHex(0, 0, ll)
         ctx.fillRect(x, y, size, size)
+        if (pattern == 'true') {
+          ctx.beginPath();
+          ctx.setLineDash([1, 3]);
+          for (let d=1; d <= size; d+=4) {
+            ctx.moveTo(x+1, y+d);
+            ctx.lineTo(x+size-1, y+d);
+          }
+          ctx.strokeStyle = pattern_color
+          ctx.stroke();
+        }
+      }
+      if (pattern == 'true') {
+        ctx.beginPath();
+        ctx.setLineDash([1, 3]);
+        // x = canvas.width - size - padding
+        // y = canvas.height - size - padding
+        for (let d=1; d <= size; d+=4) {
+          ctx.moveTo(canvas.width - size, canvas.height - size + d - padding);
+          ctx.lineTo(canvas.width, canvas.height - size + d - padding);
+        }
+        ctx.strokeStyle = pattern_color
+        ctx.stroke();
       }
     }
 
@@ -256,6 +322,11 @@
         val_number.innerHTML = this.value
         doPalette()
       }
+
+      var radios = document.querySelectorAll('input[type=radio]')
+      for (let i=0, rLen=radios.length; i<rLen; i++) {
+        radios[i].oninput = function () { doPalette() }
+      } 
 
       doPalette()
     })
