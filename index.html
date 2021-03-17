@@ -7,8 +7,8 @@
       body {
         font-family: monospace;
       }
-      fieldset { min-width: auto; float: left;}
-      .slider_block { min-width: auto;  } /* add display: inline-block; for compact mode */
+      fieldset { min-width: auto; float: left; }
+      .slider_block { min-width: auto; } /* add display: inline-block; for compact mode */
     </style>
   </head>
 
@@ -103,8 +103,8 @@
       let hnumber = parseInt(document.getElementById("val_hnumber").innerHTML) // total number of big blocks
       let number = parseInt(document.getElementById("val_number").innerHTML) // number of square in big blocks
 
-      let pattern = document.querySelector('input[name="pattern"]:checked').value;
-      let pattern_color = document.querySelector('input[name="pattern_color"]:checked').value;
+      let pattern = document.querySelector('input[name="pattern"]:checked').value
+      let pattern_color = document.querySelector('input[name="pattern_color"]:checked').value
 
       console.debug(`doPalette options: 
                     hoffset: ${hoffset}, soffset: ${soffset}, loffset: ${loffset},
@@ -130,14 +130,14 @@
             ctx.fillRect(x, y, size, size)
 
             if (pattern == 'true') {
-              ctx.beginPath();
               ctx.setLineDash([1, 3]);
+              ctx.beginPath()
               for (let d=1; d <= size; d+=4) {
-                ctx.moveTo(x+1, y+d);
-                ctx.lineTo(x+size-1, y+d);
+                ctx.moveTo(x+1, y+d)
+                ctx.lineTo(x+size-1, y+d)
               }
               ctx.strokeStyle = pattern_color
-              ctx.stroke();
+              ctx.stroke()
             }
           }
         }
@@ -149,14 +149,14 @@
         ctx.fillStyle = hslToRgbHex(0, 0, ll)
         ctx.fillRect(x, y, size, size)
         if (pattern == 'true') {
-          ctx.beginPath();
           ctx.setLineDash([1, 3]);
+          ctx.beginPath()
           for (let d=1; d <= size; d+=4) {
-            ctx.moveTo(x+1, y+d);
-            ctx.lineTo(x+size-1, y+d);
+            ctx.moveTo(x+1, y+d)
+            ctx.lineTo(x+size-1, y+d)
           }
           ctx.strokeStyle = pattern_color
-          ctx.stroke();
+          ctx.stroke()
         }
       }
       x = canvas.width - size - padding
@@ -166,25 +166,25 @@
         ctx.fillStyle = hslToRgbHex(0, 0, ll)
         ctx.fillRect(x, y, size, size)
         if (pattern == 'true') {
-          ctx.beginPath();
           ctx.setLineDash([1, 3]);
+          ctx.beginPath()
           for (let d=1; d <= size; d+=4) {
-            ctx.moveTo(x+1, y+d);
-            ctx.lineTo(x+size-1, y+d);
+            ctx.moveTo(x+1, y+d)
+            ctx.lineTo(x+size-1, y+d)
           }
           ctx.strokeStyle = pattern_color
-          ctx.stroke();
+          ctx.stroke()
         }
       }
       if (pattern == 'true') {
-        ctx.beginPath();
         ctx.setLineDash([1, 3]);
+        ctx.beginPath()
         for (let d=1; d <= size; d+=4) {
-          ctx.moveTo(canvas.width - size - padding, canvas.height - size + d - padding);
-          ctx.lineTo(canvas.width - padding, canvas.height - size + d - padding);
+          ctx.moveTo(canvas.width - size - padding, canvas.height - size + d - padding)
+          ctx.lineTo(canvas.width - padding, canvas.height - size + d - padding)
         }
         ctx.strokeStyle = pattern_color
-        ctx.stroke();
+        ctx.stroke()
       }
     }
 
@@ -203,7 +203,7 @@
         _${parseInt(document.getElementById("val_blocks").innerHTML)}
         _${parseInt(document.getElementById("val_hnumber").innerHTML)}.png`
 
-      download.setAttribute("download", fileName);
+      download.setAttribute("download", fileName)
     }
 
     // color manipulation functions taken from https://github.com/bgrins/TinyColor
