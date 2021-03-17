@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Colors Palette Generator</title>
+    <style>
+      body {
+        font-family: monospace;
+      }
+      fieldset { min-width: auto; float: left;}
+      .slider_block { min-width: auto;  } /* add display: inline-block; for compact mode */
+    </style>
+  </head>
+
+  <body>
+    <h1>Colors Palette Generator</h1>
+
+    <fieldset>
+      <legend><b>Offset Options:</b></legend>
+      <div class="slider_block slider_hoffset">
+        Color wheel offset: <span id="val_hoffset">0</span><br />
+        <input type="range" min="0" max="30" value="0" step="5" name="hoffset" id="hoffset" />
+      </div>
+      <div class="slider_block slider_soffset">
+        Saturation offset: <span id="val_soffset">0</span><br />
+        <input type="range" min="0" max="90" value="20" name="soffset" id="soffset" />
+      </div>
+      <div class="slider_block slider_loffset">
+        Luminance offset: <span id="val_loffset">0</span><br />
+        <input type="range" min="0" max="80" value="20" name="loffset" id="loffset" />
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend><b>Square Options:</b></legend>
+      <div class="slider_block slider_size">
+        Size: <span id="val_size">0</span><br />
+        <input type="range" min="1" max="100" value="32" name="size" id="size" />
+      </div>
+      <div class="slider_block slider_padding">
+        Padding: <span id="val_padding">0</span><br />
+        <input type="range" min="0" max="10" value="2" name="padding" id="padding" />
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend><b>Block Options:</b></legend>
+      <div class="slider_block slider_number">
+        Blocks size: <span id="val_number">0</span><br />
+        <input type="range" min="0" max="20" value="8" name="number" id="number" />
+      </div>
+      <div class="slider_block slider_blocks">
+        Blocks per line: <span id="val_blocks">0</span><br />
+        <input type="range" min="2" max="40" value="4" step="2" name="blocks" id="blocks" />
+      </div>
+      <div class="slider_block slider_hnumber">
+        Number of blocks: <span id="val_hnumber">0</span><br />
+        <input type="range" min="0" max="200" value="12" name="hnumber" id="hnumber" />
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend><b>About:</b></legend>
+      <p>
+        Color palette generator have been made by <br /><a href="https://github.com/multiscan">multiscan</a> &
+        <a href="https://github.com/ponsfrilus">ponsfrilus</a>.<br /><br />
+        The full source is available on<br />
+        <a href="https://github.com/epfl-dojo/colors-palette-generator">epfl-dojo/colors-palette-generator</a>.
+      </p>
+    </fieldset>
+    <div style="clear: both"></div>
+    <hr size="1" color="#eaeaea" />
+    <canvas id="canvas"></canvas><br />
+    <a id="download" download="image.png"><button type="button" onClick="download()">Download</button></a>
+  </body>
+
+  <script>
+    function doPalette() {
+      const canvas = document.getElementById("canvas")
+      const ctx = canvas.getContext("2d")
+
+      let hoffset = parseInt(document.getElementById("val_hoffset").innerHTML) // color wheel offset
+      let soffset = parseInt(document.getElementById("val_soffset").innerHTML) // saturation offset
+      let loffset = parseInt(document.getElementById("val_loffset").innerHTML) // luminance offset
+      let size = parseInt(document.getElementById("val_size").innerHTML) // size in pixel of squares
+      let padding = parseInt(document.getElementById("val_padding").innerHTML) // padding between blocks
+      let blocks = parseInt(document.getElementById("val_blocks").innerHTML) // total number of big blocks by line
+      let hnumber = parseInt(document.getElementById("val_hnumber").innerHTML) // total number of big blocks
+      let number = parseInt(document.getElementById("val_number").innerHTML) // number of square in big blocks
+      console.debug("doPalette options:")
+      console.debug("  - hoffset:", hoffset)
+      console.debug("  - soffset:", soffset)
+      console.debug("  - loffset:", loffset)
+      console.debug("  - size:", size)
+      console.debug("  - padding:", padding)
+      console.debug("  - blocks:", blocks)
+      console.debug("  - hnumber:", hnumber)
+      console.debug("  - number:", number)
+
+      canvas.width = (size + padding) * number * blocks + size + padding
+      canvas.height = (size + padding) * number * (hnumber / blocks) + size + padding
+
+      for (let h = 0; h < hnumber; h++) {
+        x0 = (h % blocks) * (size + padding) * number
+        y0 = Math.floor(h / blocks) * (size + padding) * number
+        hh = hoffset + (h * 360) / hnumber
+        for (let s = 0; s < number; s++) {
+          x = x0 + (size + padding) * s
+          ss = soffset + (s * (90 - soffset)) / number
+          for (let l = 0; l < number; l++) {
+            y = y0 + (size + padding) * l
+            ll = loffset + (l * (80 - loffset)) / number
+
+            ctx.fillStyle = hslToRgbHex(hh, ss, ll)
+            ctx.fillRect(x, y, size, size)
+          }
+        }
+      }
+      y = canvas.height - size - padding
+      for (let l = 0; l < number * blocks; l++) {
+        ll = (l * 100) / (number * blocks)
+        x = l * (size + padding)
+        ctx.fillStyle = hslToRgbHex(0, 0, ll)
+        ctx.fillRect(x, y, size, size)
+      }
+      x = canvas.width - size - padding
+      for (let l = 0; l < number * (hnumber / blocks); l++) {
+        ll = (l * 100) / (number * (hnumber / blocks))
+        y = l * (size + padding)
+        ctx.fillStyle = hslToRgbHex(0, 0, ll)
+        ctx.fillRect(x, y, size, size)
+      }
+    }
+    function download() {
+      var download = document.getElementById("download")
+      var image = document.getElementById("canvas").toDataURL("image/png").replace("image/png", "image/octet-stream")
+      download.setAttribute("href", image)
+    }
+
+    // color manipulation functions taken from https://github.com/bgrins/TinyColor
+    function pad2(c) {
+      return c.length == 1 ? "0" + c : "" + c
+    }
+
+    function rgbToHex(r, g, b) {
+      var hex = [pad2(Math.round(r).toString(16)), pad2(Math.round(g).toString(16)), pad2(Math.round(b).toString(16))]
+      return hex.join("")
+    }
+
+    function hslToRgbHex(h, s, l) {
+      var r, g, b
+
+      h = h / 360
+      s = s / 100
+      l = l / 100
+
+      function hue2rgb(p, q, t) {
+        if (t < 0) t += 1
+        if (t > 1) t -= 1
+        if (t < 1 / 6) return p + (q - p) * 6 * t
+        if (t < 1 / 2) return q
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+        return p
+      }
+
+      if (s === 0) {
+        r = g = b = l // achromatic
+      } else {
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s
+        var p = 2 * l - q
+        r = hue2rgb(p, q, h + 1 / 3)
+        g = hue2rgb(p, q, h)
+        b = hue2rgb(p, q, h - 1 / 3)
+      }
+
+      return "#" + rgbToHex(r * 255, g * 255, b * 255)
+    }
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+      // Your code to run since DOM is loaded and ready
+
+      // sliders
+      var slider_hoffset = document.getElementById("hoffset")
+      var val_hoffset = document.getElementById("val_hoffset")
+      val_hoffset.innerHTML = slider_hoffset.value // Display the default slider value
+      slider_hoffset.oninput = function () {
+        // Update the current slider value (each time you drag the slider handle)
+        val_hoffset.innerHTML = this.value
+        doPalette()
+      }
+      var slider_soffset = document.getElementById("soffset")
+      var val_soffset = document.getElementById("val_soffset")
+      val_soffset.innerHTML = slider_soffset.value // Display the default slider value
+      slider_soffset.oninput = function () {
+        // Update the current slider value (each time you drag the slider handle)
+        val_soffset.innerHTML = this.value
+        doPalette()
+      }
+      var slider_loffset = document.getElementById("loffset")
+      var val_loffset = document.getElementById("val_loffset")
+      val_loffset.innerHTML = slider_loffset.value // Display the default slider value
+      slider_loffset.oninput = function () {
+        // Update the current slider value (each time you drag the slider handle)
+        val_loffset.innerHTML = this.value
+        doPalette()
+      }
+
+      var slider_size = document.getElementById("size")
+      var val_size = document.getElementById("val_size")
+      val_size.innerHTML = slider_size.value // Display the default slider value
+      slider_size.oninput = function () {
+        // Update the current slider value (each time you drag the slider handle)
+        val_size.innerHTML = this.value
+        doPalette()
+      }
+      var slider_padding = document.getElementById("padding")
+      var val_padding = document.getElementById("val_padding")
+      val_padding.innerHTML = slider_padding.value // Display the default slider value
+      slider_padding.oninput = function () {
+        // Update the current slider value (each time you drag the slider handle)
+        val_padding.innerHTML = this.value
+        doPalette()
+      }
+
+      var slider_blocks = document.getElementById("blocks")
+      var val_blocks = document.getElementById("val_blocks")
+      val_blocks.innerHTML = slider_blocks.value // Display the default slider value
+      slider_blocks.oninput = function () {
+        // Update the current slider value (each time you drag the slider handle)
+        val_blocks.innerHTML = this.value
+        doPalette()
+      }
+      var slider_hnumber = document.getElementById("hnumber")
+      var val_hnumber = document.getElementById("val_hnumber")
+      val_hnumber.innerHTML = slider_hnumber.value // Display the default slider value
+      slider_hnumber.oninput = function () {
+        // Update the current slider value (each time you drag the slider handle)
+        val_hnumber.innerHTML = this.value
+        doPalette()
+      }
+      var slider_number = document.getElementById("number")
+      var val_number = document.getElementById("val_number")
+      val_number.innerHTML = slider_number.value // Display the default slider value
+      slider_number.oninput = function () {
+        // Update the current slider value (each time you drag the slider handle)
+        val_number.innerHTML = this.value
+        doPalette()
+      }
+
+      doPalette()
+    })
+  </script>
+</html>
